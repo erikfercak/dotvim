@@ -44,12 +44,9 @@ set sw=4
 set expandtab
 set smarttab
 
-" Colors nad fonts
+" Colors and fonts
 colorscheme vividchalk
 set guifont=Monaco:h12.00
-
-" No audible bell
-set vb
 
 " Nicer status line
 set statusline=%F%m%r%h%w\ [%{&ff}/%Y]%=[%04l,%04v][%p%%/%L]
@@ -85,7 +82,7 @@ nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
 
 " reindent whole file
-nmap <F11> 1G=G
+nmap <F11> 1G=G``
 
 " map shift+cmd+left/right to tabs
 nmap <D-S-Left> gT
