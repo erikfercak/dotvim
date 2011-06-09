@@ -28,9 +28,6 @@ nnoremap <Leader>h :noh<cr>
 " Delete trailing spaces
 nnoremap <Leader>b :silent :%s/\s\+$//<cr>:noh<cr>``
 
-" New window size
-set lines=75
-set columns=300
 " Go fullscreen
 set fu
 
