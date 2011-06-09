@@ -87,3 +87,9 @@ nmap <F11> 1G=G``
 " map shift+cmd+left/right to tabs
 nmap <D-S-Left> gT
 nmap <D-S-Right> gt
+
+" map window focus shortcuts
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-l> <C-w>l
+map <C-k> <C-w>k
