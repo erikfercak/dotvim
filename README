@@ -2,16 +2,6 @@ Installation:
 
     git clone git://github.com/erikfercak/dotvim.git ~/.vim
 
-Create symlinks:
+Init .vim directory:
 
-    ln -s ~/.vim/.vimrc ~/.vimrc
-
-Switch to the `~/.vim` directory, and fetch submodules:
-
-    cd ~/.vim
-    git submodule init
-    git submodule update
-
-Build ruby extension:
-    cd ~/.vim/bundle/command-t
-    rake make
+    ~/.vim/init.sh
