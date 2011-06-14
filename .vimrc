@@ -27,6 +27,8 @@ nnoremap <Leader><space> a<c-x><c-o>
 nnoremap <Leader>h :noh<cr>
 " Delete trailing spaces
 nnoremap <Leader>b :silent :%s/\s\+$//<cr>:noh<cr>``
+" Close window
+nnoremap <Leader>q :clo<cr>
 
 " Go fullscreen
 set fu
