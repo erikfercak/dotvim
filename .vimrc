@@ -33,7 +33,9 @@ nnoremap <Leader>b :silent :%s/\s\+$//<cr>:noh<cr>``
 nnoremap <Leader>q :clo<cr>
 
 " Go fullscreen
-set fu
+if has("gui_running")
+    set fu
+endif
 
 set ruler " show the cursor position all the time
 set relativenumber
