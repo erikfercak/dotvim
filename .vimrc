@@ -31,6 +31,8 @@ nnoremap <Leader>h :noh<cr>
 nnoremap <Leader>b :silent :%s/\s\+$//<cr>:noh<cr>``
 " Close window
 nnoremap <Leader>q :clo<cr>
+" Close window
+nnoremap <Leader>a :Ack <cword><cr>
 
 " Go fullscreen
 if has("gui_running")
