@@ -5,8 +5,10 @@ set nocompatible
 " Pathogen
 " Needed on some linux distros.
 " see http://www.adamlowe.me/2009/12/vim-destroys-all-other-rails-editors.html
-call pathogen#helptags()
+filetype off
 call pathogen#runtime_append_all_bundles()
+call pathogen#helptags()
+filetype plugin indent on
 
 
 " Generic VIM settings
@@ -70,7 +72,6 @@ set clipboard+=unnamed  " Yanks go on clipboard instead.
 
 set encoding=utf-8
 syntax enable
-filetype plugin indent on
 au FileType php set omnifunc=phpcomplete
 
 
