@@ -1,6 +1,8 @@
 " Forget VI it's <current year>!
 set nocompatible
 
+" Set backspace, same as set backspace=2
+set backspace=indent,eol,start
 
 " Pathogen
 " Needed on some linux distros.
@@ -10,8 +12,7 @@ call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 filetype plugin indent on
 
-
-" Generic VIM settings
+" Backup and history settings
 
 set nobackup
 set nowritebackup
