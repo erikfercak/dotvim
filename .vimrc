@@ -98,3 +98,7 @@ map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-l> <C-w>l
 map <C-k> <C-w>k
+
+" do not lose selection after indenting
+vnoremap < <gv
+vnoremap > >gv
