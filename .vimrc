@@ -87,17 +87,21 @@ nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
 
 " reindent whole file
-nmap <F11> 1G=G``
+noremap <F11> 1G=G``
 
 " map shift+cmd+left/right to tabs
-nmap <D-S-Left> gT
-nmap <D-S-Right> gt
+noremap <D-S-Left> gT
+noremap <D-S-Right> gt
 
 " map window focus shortcuts
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-l> <C-w>l
-map <C-k> <C-w>k
+noremap <C-h> <C-w>h
+noremap <C-j> <C-w>j
+noremap <C-l> <C-w>l
+noremap <C-k> <C-w>k
+
+" insert base filename
+noremap <Leader>f i<C-R>=expand("%:t:r")<CR><ESC>
+noremap <Leader>F a<C-R>=expand("%:t:r")<CR><ESC>
 
 " Set tabstop, softtabstop and shiftwidth to the same value
 " Originally from http://vimcasts.org/episodes/tabs-and-spaces/
