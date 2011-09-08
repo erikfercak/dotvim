@@ -27,6 +27,8 @@ snippet dumpd
 	Debug::dump(${1:});die(${2:__LINE__.':'.__FILE__});${3}
 snippet dd
 	Debug::dump(${1:});die(${2:__LINE__.':'.__FILE__});${3}
+snippet vdd
+	var_dump(${1:});die(${2:__LINE__.':'.__FILE__});${3}
 # Cache snippets
 snippet cache
 	$cacheKey = '${1:key}'.${2:md5(serialize(func_get_args()))};
