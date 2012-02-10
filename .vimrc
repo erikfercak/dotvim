@@ -24,6 +24,8 @@ set hlsearch
 set ignorecase
 set smartcase
 
+" Match brackets & co. in nomral mode with tab
+nnoremap <Tab> %
 let mapleader = ","
 nnoremap <Leader><space> a<c-x><c-o>
 " Clear search highlight
@@ -33,7 +35,9 @@ nnoremap <Leader>b :silent :%s/\s\+$//<cr>:noh<cr>``
 " Close window
 nnoremap <Leader>q :clo<cr>
 " Close window
-nnoremap <Leader>a :Ack <cword><cr>
+nnoremap <Leader>a :Ack! <cword><cr>
+nnoremap <Leader>ac :Ack! "class <cword>"<cr>
+nnoremap <Leader>ai :Ack! "interface <cword>"<cr>
 
 " Go fullscreen
 if has("gui_running")
@@ -62,8 +66,8 @@ set laststatus=2
 set guioptions+=c
 set showcmd " display incomplete commands
 
-" Display extra whitespace
-nmap <Leader>l :set list!<CR>
+" Toggle extra whitespace and ruler. Useful for console copy & paste
+nmap <Leader>l :set list!<CR>:set relativenumber!<CR>
 set list listchars=tab:»·,trail:·,eol:¬
 
 " Tab completion options
