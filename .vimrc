@@ -36,6 +36,7 @@ nnoremap <Leader>b :silent :%s/\s\+$//<cr>:noh<cr>``
 nnoremap <Leader>q :clo<cr>
 " Close window
 nnoremap <Leader>a :Ack! <cword><cr>
+nnoremap <Leader>af :Ack! "function <cword>"<cr>
 nnoremap <Leader>ac :Ack! "class <cword>"<cr>
 nnoremap <Leader>ai :Ack! "interface <cword>"<cr>
 
