@@ -75,8 +75,10 @@ if has("gui_running")
 endif
 
 set ruler " show the cursor position all the time
-set relativenumber
-set colorcolumn=90
+if v:version >= 703
+    set relativenumber
+    set colorcolumn=90
+endif
 
 " tabs
 set ts=4
