@@ -4,12 +4,30 @@ set nocompatible
 " Set backspace, same as set backspace=2
 set backspace=indent,eol,start
 
-" Pathogen
-" Needed on some linux distros.
-" see http://www.adamlowe.me/2009/12/vim-destroys-all-other-rails-editors.html
 filetype off
-call pathogen#runtime_append_all_bundles()
-call pathogen#helptags()
+set rtp+=~/.vim/bundle/vundle/
+let $GIT_SSL_NO_VERIFY = 'true'
+call vundle#rc()
+Bundle 'Janiczek/vim-latte'
+Bundle 'gmarik/vundle'
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'git://repo.or.cz/vcscommand'
+Bundle 'kien/ctrlp.vim'
+Bundle 'mileszs/ack.vim'
+Bundle 'msanders/snipmate.vim'
+Bundle 'scrooloose/nerdcommenter'
+Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-repeat'
+Bundle 'tpope/vim-speeddating'
+Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-vividchalk'
+Bundle 'vim-scripts/L9'
+Bundle 'vim-scripts/matchit.zip'
+Bundle 'scrooloose/syntastic'
+Bundle 'ervandew/supertab'
+Bundle 'shawncplus/phpcomplete.vim'
+Bundle 'PDV--phpDocumentor-for-Vim'
+
 filetype plugin indent on
 
 " Backup and history settings
@@ -23,9 +41,9 @@ set incsearch " do incremental searching
 set hlsearch
 set ignorecase
 set smartcase
+set scrolloff=3
+set sidescrolloff=5
 
-" Match brackets & co. in nomral mode with tab
-nnoremap <Tab> %
 let mapleader = ","
 nnoremap <Leader><space> a<c-x><c-o>
 " Clear search highlight
@@ -39,6 +57,17 @@ nnoremap <Leader>a :Ack! <cword><cr>
 nnoremap <Leader>af :Ack! "function <cword>"<cr>
 nnoremap <Leader>ac :Ack! "class <cword>"<cr>
 nnoremap <Leader>ai :Ack! "interface <cword>"<cr>
+
+" Syntastic
+let g:syntastic_phpcs_conf="--standard=Mf -n"
+let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': [] }
+map <F9> :SyntasticCheck<CR>
+
+" CtrlP
+nnoremap <Leader>t :CtrlP<cr>
+" Mimic Command-T behaviour
+let g:ctrlp_working_path_mode = 0
+let g:ctrlp_match_window_reversed = 0
 
 " Go fullscreen
 if has("gui_running")
@@ -56,11 +85,13 @@ set expandtab
 set smarttab
 
 " Colors and fonts
-colorscheme vividchalk
+" colorscheme vividchalk
 set guifont=Monaco:h12.00
+set background=dark
+colorscheme solarized
 
 " Nicer status line
-set statusline=%F%m%r%h%w\ [%{&ff}/%Y]%=[%04l,%04v][%p%%/%L]
+set statusline=%F%m%r%h%w\ [%{&ff}/%Y]\ [%{getcwd()}]\ %{SyntasticStatuslineFlag()}%=[%04l,%04v][%p%%/%L]
 set laststatus=2
 
 " Use console dialogs
@@ -68,14 +99,14 @@ set guioptions+=c
 set showcmd " display incomplete commands
 
 " Toggle extra whitespace and ruler. Useful for console copy & paste
-nmap <Leader>l :set list!<CR>:set relativenumber!<CR>
+nmap <Leader>l :setlocal list!<CR>:set relativenumber!<CR>
 set list listchars=tab:»·,trail:·,eol:¬
 
 " Tab completion options
 " (only complete to the longest unambiguous match, and show a menu)
 set completeopt=menu,preview
 set wildmode=list:longest,list:full
-set complete=.,t
+set complete=.,w
 
 set cf  " Enable error files & error jumping.
 set clipboard+=unnamed  " Yanks go on clipboard instead.
@@ -135,3 +166,5 @@ function! Stab()
 endfunction
 
 map <Leader>s :Stab<cr>
+
+let g:SuperTabDefaultCompletionType = "context"
