@@ -68,6 +68,7 @@ nnoremap <Leader>t :CtrlP<cr>
 " Mimic Command-T behaviour
 let g:ctrlp_working_path_mode = 0
 let g:ctrlp_match_window_reversed = 0
+let g:ctrlp_clear_cache_on_exit=0
 
 " Go fullscreen
 if has("gui_running")
