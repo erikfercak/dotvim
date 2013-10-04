@@ -1,5 +1,6 @@
 " Forget VI it's <current year>!
 set nocompatible
+set encoding=utf-8
 
 " Set backspace, same as set backspace=2
 set backspace=indent,eol,start
@@ -114,7 +115,6 @@ set complete=.,w
 set cf  " Enable error files & error jumping.
 set clipboard+=unnamed  " Yanks go on clipboard instead.
 
-set encoding=utf-8
 syntax enable
 au FileType php set omnifunc=phpcomplete
 
