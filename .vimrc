@@ -14,7 +14,7 @@ Bundle 'gmarik/vundle'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'git://repo.or.cz/vcscommand'
 Bundle 'kien/ctrlp.vim'
-Bundle 'mileszs/ack.vim'
+Bundle 'rking/ag.vim'
 Bundle 'msanders/snipmate.vim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'tpope/vim-fugitive'
@@ -53,14 +53,23 @@ nnoremap <Leader>h :noh<cr>
 nnoremap <Leader>b :silent :%s/\s\+$//<cr>:noh<cr>``
 " Close window
 nnoremap <Leader>q :clo<cr>
-" Close window
-nnoremap <Leader>a :Ack! <cword><cr>
-nnoremap <Leader>af :Ack! "function <cword>"<cr>
-nnoremap <Leader>ac :Ack! "class <cword>"<cr>
-nnoremap <Leader>ai :Ack! "interface <cword>"<cr>
+
+" The Silver Searcher
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " Map search shortcuts
+  nnoremap <Leader>a :Ag! <cword><cr>
+  nnoremap <Leader>af :Ag! "function <cword>"<cr>
+  nnoremap <Leader>ac :Ag! "class <cword>"<cr>
+  nnoremap <Leader>ai :Ag! "interface <cword>"<cr>
+endif
 
 " Syntastic
-let g:syntastic_phpcs_conf="--standard=Mf -n"
 let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [], 'passive_filetypes': [] }
 map <F9> :SyntasticCheck<CR>
 
