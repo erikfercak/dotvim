@@ -10,7 +10,7 @@ let $GIT_SSL_NO_VERIFY = 'true'
 call vundle#rc()
 Bundle 'gmarik/vundle'
 Bundle 'altercation/vim-colors-solarized'
-Bundle "andrewRadev/splitjoin.vim"
+Bundle "AndrewRadev/splitjoin.vim"
 Bundle 'git://repo.or.cz/vcscommand'
 Bundle 'joonty/vdebug'
 Bundle 'kien/ctrlp.vim'
