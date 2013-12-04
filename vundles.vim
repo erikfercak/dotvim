@@ -9,6 +9,7 @@ let $GIT_SSL_NO_VERIFY = 'true'
 
 call vundle#rc()
 Bundle 'gmarik/vundle'
+Bundle 'bling/vim-airline'
 Bundle 'altercation/vim-colors-solarized'
 Bundle "AndrewRadev/splitjoin.vim"
 Bundle 'git://repo.or.cz/vcscommand'
