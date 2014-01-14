@@ -5,4 +5,4 @@ elseif executable('/usr/bin/ctags')
     let g:tabgbar_ctags_bin = '/usr/bin/ctags'
 endif
 
-noremap <Leader>T :TagbarToggle<CR>
+noremap <Leader>T :TagbarOpen f<CR>
