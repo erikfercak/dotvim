@@ -51,7 +51,7 @@ set smarttab
 " colorscheme vividchalk
 set guifont=Monaco:h12.00
 set background=dark
-colorscheme solarized
+silent! colorscheme solarized
 
 " Nicer status line
 set statusline=%F%m%r%h%w\ [%{&ff}/%Y]\ [%{getcwd()}]\ %{SyntasticStatuslineFlag()}%=[%04l,%04v][%p%%/%L]
