@@ -36,6 +36,7 @@ if filereadable(expand("~/.vim/vundles.vim"))
 endif
 
 set ruler " show the cursor position all the time
+set number
 if v:version >= 703
     set relativenumber
     set colorcolumn=90
@@ -75,24 +76,10 @@ set cf " Confirm some operations
 set clipboard+=unnamed  " Yanks go on clipboard instead.
 
 " Mappings
-
 inoremap <F1> <ESC> " No Help, please
 nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
-
-" map shift+cmd+left/right to tabs
-" noremap <D-S-Left> gT
-" noremap <D-S-Right> gt
-
-" map window focus shortcuts
-" noremap <C-h> <C-w>h
-" noremap <C-j> <C-w>j
-" noremap <C-l> <C-w>l
-" noremap <C-k> <C-w>k
-
-" insert base filename
-" noremap <Leader>f i<C-R>=expand("%:t:r")<CR><ESC>
-" noremap <Leader>F a<C-R>=expand("%:t:r")<CR><ESC>
+nnoremap <silent><Leader><C-]> <C-w><C-]><C-w>T
 
 for fpath in split(globpath('~/.vim/settings', '*.vim'), '\n')
     exe 'source' fpath
