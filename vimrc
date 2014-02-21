@@ -35,11 +35,17 @@ if filereadable(expand("~/.vim/vundles.vim"))
     source ~/.vim/vundles.vim
 endif
 
-set ruler " show the cursor position all the time
+set ruler
 set number
+" Dipslay whitespace chars
+set list listchars=tab:»·,trail:·,eol:¬
+" Toggle extra whitespace and ruler. Useful for console copy & paste
+nnoremap <Leader>l :setlocal list!<CR>:set number!<CR>
 if v:version >= 703
     set relativenumber
     set colorcolumn=90
+    " Toggle extra whitespace and ruler. Useful for console copy & paste
+    nnoremap <Leader>l :setlocal list!<CR>:set relativenumber!<CR>:set number!<CR>
 endif
 
 " tabs
@@ -62,10 +68,6 @@ set laststatus=2
 set guioptions+=c
 set showcmd " display incomplete commands
 
-" Toggle extra whitespace and ruler. Useful for console copy & paste
-nmap <Leader>l :setlocal list!<CR>:set relativenumber!<CR>
-set list listchars=tab:»·,trail:·,eol:¬
-
 " Tab completion options
 " (only complete to the longest unambiguous match, and show a menu)
 set completeopt=menu,preview
@@ -79,6 +81,7 @@ set clipboard+=unnamed  " Yanks go on clipboard instead.
 inoremap <F1> <ESC> " No Help, please
 nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
+" Open tag under cursor in new tab
 nnoremap <silent><Leader><C-]> <C-w><C-]><C-w>T
 
 for fpath in split(globpath('~/.vim/settings', '*.vim'), '\n')
