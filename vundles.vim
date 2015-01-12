@@ -12,7 +12,6 @@ Bundle 'gmarik/vundle'
 Bundle 'bling/vim-airline'
 Bundle 'altercation/vim-colors-solarized'
 Bundle "AndrewRadev/splitjoin.vim"
-Bundle 'git://repo.or.cz/vcscommand'
 Bundle 'joonty/vdebug'
 Bundle 'kien/ctrlp.vim'
 Bundle 'majutsushi/tagbar'
