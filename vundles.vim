@@ -26,6 +26,7 @@ Bundle 'tpope/vim-surround'
 Bundle 'vim-scripts/AutoTag'
 Bundle 'vim-scripts/matchit.zip'
 Bundle 'vim-php/tagbar-phpctags.vim'
+Bundle 'blueyed/smarty.vim'
 
 "Filetype plugin indent on is required by vundle
 filetype plugin indent on
