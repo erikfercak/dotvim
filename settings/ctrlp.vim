@@ -1,4 +1,5 @@
 nnoremap <Leader>t :CtrlP<cr>
+nnoremap <Leader>r :CtrlPMRUFiles<cr>
 
 " Mimic Command-T behaviour
 let g:ctrlp_working_path_mode = 0
