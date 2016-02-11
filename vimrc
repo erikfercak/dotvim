@@ -21,7 +21,7 @@ set sidescrolloff=5
 
 syntax on
 
-let mapleader = ","
+let mapleader = "\<space>"
 nnoremap <Leader><space> a<c-x><c-o>
 " Clear search highlight
 nnoremap <Leader>h :noh<cr>
