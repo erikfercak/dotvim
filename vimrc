@@ -72,7 +72,7 @@ set showcmd " display incomplete commands
 " (only complete to the longest unambiguous match, and show a menu)
 set completeopt=menu,preview
 set wildmode=list:longest,list:full
-set complete=.,w
+set complete=.,w,b
 
 set cf " Confirm some operations
 set clipboard+=unnamed  " Yanks go on clipboard instead.
