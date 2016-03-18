@@ -1,0 +1,11 @@
+snippet vdd
+    var_dump(${1:});die(${2:__LINE__.':'.__FILE__});${3}
+endsnippet
+
+snippet prd
+    print_r(${1:});die(${2:__LINE__.':'.__FILE__});${3}
+endsnippet
+
+snippet preprd
+    echo '<pre>';print_r(${1:});echo '</pre>';die(${2:__LINE__.':'.__FILE__});${3}
+endsnippet
