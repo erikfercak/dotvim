@@ -28,6 +28,7 @@ Plugin 'vim-php/tagbar-phpctags.vim'
 Plugin 'blueyed/smarty.vim'
 Plugin 'rizzatti/dash.vim'
 Plugin 'SirVer/ultisnips'
+Plugin 'Janiczek/vim-latte'
 
 "Filetype plugin indent on is required by vundle
 filetype plugin indent on
