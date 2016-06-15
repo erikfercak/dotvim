@@ -55,7 +55,6 @@ set expandtab
 set smarttab
 
 " Colors and fonts
-" colorscheme vividchalk
 set guifont=Monaco:h12.00
 set background=dark
 silent! colorscheme solarized
