@@ -11,11 +11,9 @@ call vundle#rc()
 Plugin 'gmarik/vundle'
 Plugin 'bling/vim-airline'
 Plugin 'altercation/vim-colors-solarized'
-Plugin 'joonty/vdebug'
 Plugin 'kien/ctrlp.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'rking/ag.vim'
-Plugin 'scrooloose/syntastic'
 Plugin 'shawncplus/phpcomplete.vim'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'tpope/vim-fugitive'
@@ -26,10 +24,9 @@ Plugin 'vim-scripts/matchit.zip'
 Plugin 'vim-php/tagbar-phpctags.vim'
 Plugin 'blueyed/smarty.vim'
 Plugin 'rizzatti/dash.vim'
-Plugin 'SirVer/ultisnips'
-Plugin 'tpope/vim-vinegar'
 Plugin 'tpope/vim-projectionist'
 Plugin 'junegunn/vim-easy-align'
+Plugin 'dense-analysis/ale'
 
 "Filetype plugin indent on is required by vundle
 filetype plugin indent on

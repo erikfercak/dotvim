@@ -38,7 +38,7 @@ endif
 set ruler
 set number
 " Dipslay whitespace chars
-set list listchars=tab:»·,trail:·,eol:¬
+set list listchars=tab:»·,trail:·
 " Toggle extra whitespace and ruler. Useful for console copy & paste
 nnoremap <Leader>l :setlocal list!<CR>:set number!<CR>
 if v:version >= 703
