@@ -52,17 +52,11 @@ set expandtab
 set smarttab
 
 " Colors and fonts
-if (match($TERM, "-256color") != -1) && (match($TERM, "screen-256color") == -1)
-  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-  set termguicolors
-endif
-set guifont=Hack:h11.00
+set guifont=Monaco:h12.00
 set background=dark
 silent! colorscheme solarized
 
 " Nicer status line
-set statusline=%F%m%r%h%w\ [%{&ff}/%Y]\ [%{getcwd()}]\ %{SyntasticStatuslineFlag()}%=[%04l,%04v][%p%%/%L]
 set laststatus=2
 
 " Use console dialogs
@@ -84,6 +78,9 @@ nnoremap <F1> <ESC>
 vnoremap <F1> <ESC>
 " Open tag under cursor in new tab
 nnoremap <silent><Leader><C-]> <C-w><C-]><C-w>T
+
+set splitright
+set splitbelow
 
 for fpath in split(globpath('~/.vim/settings', '*.vim'), '\n')
     exe 'source' fpath
