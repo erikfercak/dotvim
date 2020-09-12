@@ -57,9 +57,8 @@ if (match($TERM, "-256color") != -1) && (match($TERM, "screen-256color") == -1)
   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
 endif
-set guifont=Hack:h10.00
+set guifont=Hack:h11.00
 set background=dark
-"silent! colorscheme base16-solarized-dark
 silent! colorscheme solarized
 
 " Nicer status line
