@@ -25,8 +25,6 @@ let mapleader = "\<space>"
 nnoremap <Leader><space> a<c-x><c-o>
 " Clear search highlight
 nnoremap <Leader>h :noh<cr>
-" Delete trailing spaces
-nnoremap <Leader>b :silent :%s/\s\+$//<cr>:noh<cr>``
 " Close window
 nnoremap <Leader>q :clo<cr>
 
@@ -43,20 +41,25 @@ set list listchars=tab:»·,trail:·
 nnoremap <Leader>l :setlocal list!<CR>:set number!<CR>
 if v:version >= 703
     set relativenumber
-    set colorcolumn=90
     " Toggle extra whitespace and ruler. Useful for console copy & paste
     nnoremap <Leader>l :setlocal list!<CR>:set relativenumber!<CR>:set number!<CR>
 endif
 
 " tabs
-set ts=4
-set sw=4
+set ts=2
+set sw=2
 set expandtab
 set smarttab
 
 " Colors and fonts
-set guifont=Monaco:h12.00
+if (match($TERM, "-256color") != -1) && (match($TERM, "screen-256color") == -1)
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+set guifont=Hack:h10.00
 set background=dark
+"silent! colorscheme base16-solarized-dark
 silent! colorscheme solarized
 
 " Nicer status line
