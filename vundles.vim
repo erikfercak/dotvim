@@ -9,7 +9,7 @@ let $GIT_SSL_NO_VERIFY = 'true'
 
 call vundle#rc()
 Plugin 'gmarik/vundle'
-Plugin 'bling/vim-airline'
+Plugin 'itchyny/lightline.vim'
 "Plugin 'altercation/vim-colors-solarized'
 Plugin 'frankier/neovim-colors-solarized-truecolor-only'
 Plugin 'kien/ctrlp.vim'
