@@ -82,7 +82,6 @@ nnoremap <silent><Leader><C-]> <C-w><C-]><C-w>T
 set splitright
 set splitbelow
 set nojoinspaces
-set signcolumn=number
 
 for fpath in split(globpath('~/.vim/settings', '*.vim'), '\n')
     exe 'source' fpath
