@@ -21,6 +21,8 @@ Plugin 'junegunn/vim-easy-align'
 Plugin 'dense-analysis/ale'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'hashivim/vim-terraform'
+Plugin 'neoclide/coc.nvim'
+Plugin 'elixir-editors/vim-elixir'
 
 "Filetype plugin indent on is required by vundle
 filetype plugin indent on
