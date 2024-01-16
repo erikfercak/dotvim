@@ -1,7 +1,2 @@
 Installation:
-
-    git clone git://github.com/erikfercak/dotvim.git ~/.vim
-
-Init .vim directory:
-
-    ~/.vim/init.sh
+    Move, copy or symlink init.lua into ~/.config/nvim/
