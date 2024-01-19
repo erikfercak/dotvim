@@ -164,6 +164,9 @@ require("lazy").setup({
           section_separators = "",
           component_separators = "",
         },
+        sections = {
+          lualine_c = { { 'filename', path = 1 } }
+        },
       },
     },
     -- Whole LSP config is based off
