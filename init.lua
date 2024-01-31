@@ -1,13 +1,23 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '>-2<CR>gv=gv")
+
+vim.keymap.set("n", "<leader>wh", ":wincmd h<CR>")
+vim.keymap.set("n", "<leader>wj", ":wincmd j<CR>")
+vim.keymap.set("n", "<leader>wk", ":wincmd k<CR>")
+vim.keymap.set("n", "<leader>wl", ":wincmd l<CR>")
+vim.keymap.set("n", "<leader>wv", ":wincmd v<CR>")
+vim.keymap.set("n", "<leader>ws", ":wincmd s<CR>")
+vim.keymap.set("n", "<leader>wq", ":wincmd q<CR>")
+
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 
 vim.opt.hidden = true
--- vim.opt.signcolumn = "yes:1"
 
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -115,7 +125,8 @@ require("lazy").setup({
         vim.keymap.set("n", "<leader>b", builtin.buffers, { desc = "find buffers" })
         vim.keymap.set("n", "<leader>f", builtin.find_files, { desc = "find files" })
         vim.keymap.set("n", "<leader>r", builtin.oldfiles, { desc = "find recent files" })
-        vim.keymap.set("n", "<leader>g", builtin.live_grep, { desc = "live grep" })
+        vim.keymap.set("n", "<leader>lg", builtin.live_grep, { desc = "live grep" })
+        vim.keymap.set("n", "<leader>h", builtin.help_tags, { desc = "search help" })
       end,
     },
     {
@@ -178,7 +189,7 @@ require("lazy").setup({
     {
       "williamboman/mason-lspconfig.nvim",
       opts = {
-        ensure_installed = { "lua_ls" }
+        ensure_installed = { "lua_ls", "rust_analyzer" }
       }
     },
     {
@@ -186,14 +197,27 @@ require("lazy").setup({
       dependencies = {
         "hrsh7th/cmp-nvim-lsp",
         "hrsh7th/nvim-cmp",
+        "hrsh7th/cmp-buffer",
+        "hrsh7th/cmp-path",
+        "hrsh7th/cmp-cmdline",
+        "hrsh7th/cmp-nvim-lua",
         "L3MON4D3/LuaSnip",
-        "folke/neodev.nvim"
+        -- "folke/neodev.nvim",
+        "j-hui/fidget.nvim"
       },
       config = function()
+        -- require("neodev").setup({})
+        require("fidget").setup({})
+
         local lspconfig = require("lspconfig")
+        local default_capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+        lspconfig.rust_analyzer.setup({
+          capabilities = default_capabilities
+        })
 
         lspconfig.lua_ls.setup({
-          capabilities = require("cmp_nvim_lsp").default_capabilities(),
+          capabilities = default_capabilities,
           settings = {
             Lua = {
               runtime = {
@@ -209,6 +233,11 @@ require("lazy").setup({
               }
             }
           }
+        })
+
+        vim.diagnostic.config({
+          virtual_text = { source = true },
+          update_on_insert = true,
         })
 
         -- Global mappings.
@@ -237,8 +266,8 @@ require("lazy").setup({
 
             -- Buffer local mappings.
             -- See `:help vim.lsp.*` for documentation on any of the below functions
-            vim.keymap.set("n", "gD", vim.lsp.buf.declaration, gen_opts("Goto declaration"))
             vim.keymap.set("n", "gd", vim.lsp.buf.definition, gen_opts("Goto definition"))
+            vim.keymap.set("n", "gD", vim.lsp.buf.declaration, gen_opts("Goto declaration"))
             vim.keymap.set("n", "K", vim.lsp.buf.hover, gen_opts("LSP hover"))
             -- vim.keymap.set("n", "gi", vim.lsp.buf.implementation, gen_opts("Goto implementation"))
             -- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
@@ -260,9 +289,10 @@ require("lazy").setup({
         local cmp = require("cmp")
 
         cmp.setup({
-          sources = {
-            {name = "nvim_lsp"},
-          },
+          sources = cmp.config.sources(
+            {{name = "nvim_lsp"}},
+            {{name = "buffer", option = { keyword_length = 4} }}
+          ),
           mapping = cmp.mapping.preset.insert({
             -- Enter key confirms completion item
             -- Accept currently selected item. Set `select` to `false`
@@ -282,6 +312,38 @@ require("lazy").setup({
               require("luasnip").lsp_expand(args.body)
             end,
           },
+
+          experimental = {
+            native_menu = false,
+            ghost_text = true
+          },
+        })
+
+        -- Set configuration for specific filetype.
+        cmp.setup.filetype("lua", {
+          sources = cmp.config.sources({
+            { name = "nvim_lua" },
+          }, {
+            { name = "buffer", option = { keyword_length = 4 }},
+          })
+        })
+
+        -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+        cmp.setup.cmdline({ '/', '?' }, {
+          mapping = cmp.mapping.preset.cmdline(),
+          sources = {
+            { name = 'buffer' }
+          }
+        })
+
+        -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+        cmp.setup.cmdline(':', {
+          mapping = cmp.mapping.preset.cmdline(),
+          sources = cmp.config.sources({
+            { name = 'path' }
+          }, {
+            { name = 'cmdline' }
+          })
         })
       end,
     },
@@ -314,6 +376,21 @@ require("lazy").setup({
     },
     {
       "tpope/vim-fugitive",
+    },
+    {
+      "lewis6991/gitsigns.nvim",
+      opts = {
+        current_line_blame_opts = {
+          delay = 100,
+          --virt_text_pos = "right_align"
+        },
+        on_attach = function(bfnr)
+          local gs = package.loaded.gitsigns
+
+          vim.keymap.set("n", "<leader>gl", gs.toggle_current_line_blame, { desc = "Toggle line blame", buffer = bfnr })
+          vim.keymap.set("n", "<leader>gp", gs.preview_hunk, { desc = "Preview hunk", buffer = bfnr })
+        end
+      }
     },
   },
 })
