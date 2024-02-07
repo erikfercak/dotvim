@@ -122,7 +122,7 @@ require("lazy").setup({
         })
 
         local builtin = require("telescope.builtin")
-        vim.keymap.set("n", "<leader>b", builtin.buffers, { desc = "find buffers" })
+        vim.keymap.set("n", "<leader>b", function() builtin.buffers({ sort_lastused = true }) end, { desc = "find buffers" })
         vim.keymap.set("n", "<leader>f", builtin.find_files, { desc = "find files" })
         vim.keymap.set("n", "<leader>r", builtin.oldfiles, { desc = "find recent files" })
         vim.keymap.set("n", "<leader>lg", builtin.live_grep, { desc = "live grep" })
