@@ -337,10 +337,14 @@ require("lazy").setup({
 					),
 					completion = { completeopt = "menu,menuone,noinsert" },
 					mapping = cmp.mapping.preset.insert({
-						-- Enter key confirms completion item
+						-- Select the next item
+						["<C-n>"] = cmp.mapping.select_next_item(),
+						-- Select the previous item
+						["<C-p>"] = cmp.mapping.select_prev_item(),
+
 						-- Accept currently selected item. Set `select` to `false`
 						-- to only confirm explicitly selected items.
-						["<CR>"] = cmp.mapping.confirm({ select = true }),
+						["<C-y>"] = cmp.mapping.confirm({ select = true }),
 
 						-- Ctrl + space triggers completion menu
 						["<C-Space>"] = cmp.mapping.complete(),
