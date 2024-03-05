@@ -74,12 +74,20 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	{
 		{
-			"ishan9299/nvim-solarized-lua",
+			"catppuccin/nvim",
+			name = "catppuccin",
 			priority = 1000,
 			config = function()
-				vim.cmd.colorscheme("solarized")
+				vim.cmd.colorscheme("catppuccin-mocha")
 			end,
 		},
+		-- {
+		-- 	"ishan9299/nvim-solarized-lua",
+		-- 	priority = 1000,
+		-- 	config = function()
+		-- 		vim.cmd.colorscheme("solarized")
+		-- 	end,
+		-- },
 		{
 			"nvim-treesitter/nvim-treesitter",
 			build = ":TSUpdate",
@@ -440,7 +448,7 @@ require("lazy").setup({
 		{
 			-- Autoformat
 			"stevearc/conform.nvim",
-			event = "BufWritePre",
+			-- event = "BufWritePre",
 			config = function()
 				require("conform").setup({
 					notify_on_error = false,
@@ -454,8 +462,10 @@ require("lazy").setup({
 					formatters_by_ft = {
 						go = { "gofmt" },
 						lua = { "stylua" },
+						opentofu = { "tofu_fmt" },
 						ruby = { "rubocop" },
 						rust = { "rustfmt" },
+						terraform = { "tofu_fmt" },
 						-- Conform can also run multiple formatters sequentially
 						-- python = { "isort", "black" },
 						--
@@ -483,6 +493,16 @@ require("lazy").setup({
 				end, {
 					desc = "Re-enable autoformat-on-save",
 				})
+
+				vim.keymap.set("n", "<leader>lt", function()
+					if vim.g.disable_autoformat then
+						print("Enabling format on save")
+						vim.cmd(":FormatEnable")
+					else
+						print("Disabling format on save")
+						vim.cmd(":FormatDisable")
+					end
+				end, { desc = "Toggle format on save" })
 			end,
 		},
 	},
