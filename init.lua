@@ -36,11 +36,11 @@ vim.opt.inccommand = "split"
 
 vim.opt.cmdheight = 1
 vim.opt.showmode = false
-vim.opt.completeopt = "menu"
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 vim.opt.wildmode = "longest:full,full"
 vim.opt.wrap = false
-vim.opt.listchars = { tab = "»·", trail = "·" }
+vim.opt.listchars = { tab = "»·", trail = "·", nbsp = "␣" }
 vim.opt.list = true
 vim.opt.mouse = "a"
 vim.opt.scrolloff = 4
@@ -98,6 +98,7 @@ require("lazy").setup({
 					ensure_installed = {
 						"bash",
 						"elixir",
+						"fish",
 						"go",
 						"html",
 						"javascript",
@@ -116,6 +117,19 @@ require("lazy").setup({
 			end,
 		},
 		{
+			"nvim-treesitter/nvim-treesitter-context",
+			config = function()
+				vim.keymap.set("n", "<leader>c", "<cmd>TSContextToggle<CR>", { desc = "toggle context" })
+			end,
+		},
+		{
+			"echasnovski/mini.nvim",
+			version = "*",
+			config = function()
+				require("mini.ai").setup()
+			end,
+		},
+		{
 			"nvim-telescope/telescope.nvim",
 			event = "VeryLazy",
 			tag = "0.1.5",
@@ -130,7 +144,7 @@ require("lazy").setup({
 						mappings = {
 							i = {
 								["<esc>"] = actions.close,
-								["<C-v>"] = layout_actions.toggle_preview,
+								-- ["<C-v>"] = layout_actions.toggle_preview,
 							},
 						},
 					},
@@ -216,7 +230,7 @@ require("lazy").setup({
 		{
 			"williamboman/mason-lspconfig.nvim",
 			opts = {
-				ensure_installed = { "lua_ls", "rust_analyzer", "gopls" },
+				ensure_installed = { "lexical", "lua_ls", "gopls", "rust_analyzer" },
 			},
 		},
 		{
@@ -242,6 +256,25 @@ require("lazy").setup({
 				default_capabilities =
 					vim.tbl_deep_extend("force", default_capabilities, require("cmp_nvim_lsp").default_capabilities())
 				-- local default_capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+				-- lspconfig.elixirls.setup({
+				-- 	cmd = { "elixir-ls" },
+				-- 	capabilities = default_capabilities,
+				-- 	settings = {
+				-- 		elixirLS = {
+				-- 			dialyzerEnabled = false,
+				-- 			fetchDeps = false,
+				-- 		},
+				-- 	},
+				-- })
+
+				lspconfig.lexical.setup({
+					filetypes = { "elixir", "eelixir", "heex" },
+					cmd = { "/Users/erik/.local/share/nvim/mason/bin/lexical", "server" },
+					-- cmd = { "/Users/erik/.local/share/nvim/mason/packages/lexical/libexec/lexical/bin/start_lexical.sh" },
+					root_dir = require("lspconfig.util").root_pattern({ "mix.exs", ".git" }),
+					capabilities = default_capabilities,
+				})
 
 				lspconfig.rust_analyzer.setup({
 					capabilities = default_capabilities,
@@ -323,6 +356,19 @@ require("lazy").setup({
 						vim.keymap.set("n", "<space>lf", function()
 							vim.lsp.buf.format({ async = true })
 						end, { buffer = event.buf, desc = "Format buffer" })
+
+						local client = vim.lsp.get_client_by_id(event.data.client_id)
+						if client and client.server_capabilities.documentHighlightProvider then
+							vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+								buffer = event.buf,
+								callback = vim.lsp.buf.document_highlight,
+							})
+
+							vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+								buffer = event.buf,
+								callback = vim.lsp.buf.clear_references,
+							})
+						end
 					end,
 				})
 
@@ -333,7 +379,8 @@ require("lazy").setup({
 				cmp.setup({
 					sources = cmp.config.sources(
 						{ { name = "nvim_lsp" } },
-						{ { name = "buffer", option = { keyword_length = 4 } } }
+						{ { name = "buffer", option = { keyword_length = 4 } } },
+						{ { name = "path" } }
 					),
 					completion = { completeopt = "menu,menuone,noinsert" },
 					mapping = cmp.mapping.preset.insert({
@@ -464,6 +511,7 @@ require("lazy").setup({
 						return { timeout_ms = 1000, lsp_fallback = true }
 					end,
 					formatters_by_ft = {
+						elixir = { "mix" },
 						go = { "gofmt" },
 						lua = { "stylua" },
 						opentofu = { "tofu_fmt" },
@@ -507,6 +555,21 @@ require("lazy").setup({
 						vim.cmd(":FormatDisable")
 					end
 				end, { desc = "Toggle format on save" })
+			end,
+		},
+		{
+			"stevearc/oil.nvim",
+			opts = {},
+			-- Optional dependencies
+			dependencies = { "nvim-tree/nvim-web-devicons" },
+		},
+		{
+			"folke/flash.nvim",
+			event = "VeryLazy",
+			config = function()
+				vim.keymap.set("n", "<leader>s", function()
+					require("flash").jump()
+				end, { desc = "flash jump" })
 			end,
 		},
 	},
