@@ -1,2 +1,3 @@
-Installation:
-    Move, copy or symlink init.lua into ~/.config/nvim/
+#Installation:
+
+Move, copy or symlink `init.lua` and `lazy-lock.json` into ~/.config/nvim/
