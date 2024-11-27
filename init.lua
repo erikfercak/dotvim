@@ -108,6 +108,7 @@ require("lazy").setup({
 						"rust",
 						"vim",
 						"vimdoc",
+						"zig",
 					},
 					sync_install = false,
 					auto_install = true,
@@ -230,7 +231,7 @@ require("lazy").setup({
 		{
 			"williamboman/mason-lspconfig.nvim",
 			opts = {
-				ensure_installed = { "lexical", "lua_ls", "gopls", "rust_analyzer" },
+				ensure_installed = { "lexical", "lua_ls", "gopls", "rust_analyzer", "zls" },
 			},
 		},
 		{
@@ -273,6 +274,10 @@ require("lazy").setup({
 					cmd = { "/Users/erik/.local/share/nvim/mason/bin/lexical", "server" },
 					-- cmd = { "/Users/erik/.local/share/nvim/mason/packages/lexical/libexec/lexical/bin/start_lexical.sh" },
 					root_dir = require("lspconfig.util").root_pattern({ "mix.exs", ".git" }),
+					capabilities = default_capabilities,
+				})
+
+				lspconfig.zls.setup({
 					capabilities = default_capabilities,
 				})
 
