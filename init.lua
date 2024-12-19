@@ -120,6 +120,9 @@ require("lazy").setup({
 		{
 			"nvim-treesitter/nvim-treesitter-context",
 			config = function()
+				require("treesitter-context").setup({
+					enable = false,
+				})
 				vim.keymap.set("n", "<leader>c", "<cmd>TSContextToggle<CR>", { desc = "toggle context" })
 			end,
 		},
