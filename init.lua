@@ -564,11 +564,17 @@ require("lazy").setup({
 		{
 			"folke/flash.nvim",
 			event = "VeryLazy",
-			config = function()
-				vim.keymap.set("n", "<leader>s", function()
-					require("flash").jump()
-				end, { desc = "flash jump" })
-			end,
+			opts = { modes = { char = { enabled = false } } },
+			keys = {
+				{
+					"<leader>s",
+					mode = { "n", "x", "o" },
+					function()
+						require("flash").jump()
+					end,
+					desc = "Flash Jump",
+				},
+			},
 		},
 	},
 })
