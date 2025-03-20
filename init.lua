@@ -173,6 +173,7 @@ require("lazy").setup({
 				vim.keymap.set("n", "<leader>lg", builtin.live_grep, { desc = "live grep" })
 				vim.keymap.set("n", "<leader>h", builtin.help_tags, { desc = "search help" })
 				vim.keymap.set("n", "<leader>w", builtin.grep_string, { desc = "search current word" })
+				vim.keymap.set("n", "<leader>gs", builtin.git_status, { desc = "git status files" })
 
 				-- Slightly advanced example of overriding default behavior and theme
 				vim.keymap.set("n", "<leader>/", function()
@@ -218,6 +219,7 @@ require("lazy").setup({
 			},
 			config = function()
 				vim.keymap.set("n", "<leader>t", ":Neotree toggle<cr>", { desc = "Neotree" })
+				vim.keymap.set("n", "<leader>p", ":Neotree reveal<cr>", { desc = "Show current file in Neotree" })
 			end,
 		},
 		{
