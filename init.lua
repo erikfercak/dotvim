@@ -16,6 +16,7 @@ vim.opt.expandtab = true
 vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
+vim.opt.virtualedit = "block"
 
 vim.opt.hidden = true
 
@@ -42,7 +43,7 @@ vim.opt.wildmode = "longest:full,full"
 vim.opt.wrap = false
 vim.opt.listchars = { tab = "»·", trail = "·", nbsp = "␣" }
 vim.opt.list = true
-vim.opt.mouse = "a"
+vim.opt.mouse = ""
 vim.opt.scrolloff = 4
 vim.opt.sidescrolloff = 4
 vim.opt.joinspaces = false
@@ -58,16 +59,21 @@ vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.history = 100 -- keep 500 lines of command line history
 
+vim.opt.winborder = "rounded"
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-	vim.fn.system({
-		"git",
-		"clone",
-		"--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable", -- latest stable release
-		lazypath,
-	})
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+	if vim.v.shell_error ~= 0 then
+		vim.api.nvim_echo({
+			{ "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+			{ out, "WarningMsg" },
+			{ "\nPress any key to exit..." },
+		}, true, {})
+		vim.fn.getchar()
+		os.exit(1)
+	end
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -81,13 +87,6 @@ require("lazy").setup({
 				vim.cmd.colorscheme("catppuccin-mocha")
 			end,
 		},
-		-- {
-		-- 	"ishan9299/nvim-solarized-lua",
-		-- 	priority = 1000,
-		-- 	config = function()
-		-- 		vim.cmd.colorscheme("solarized")
-		-- 	end,
-		-- },
 		{
 			"nvim-treesitter/nvim-treesitter",
 			build = ":TSUpdate",
@@ -123,7 +122,7 @@ require("lazy").setup({
 				require("treesitter-context").setup({
 					enable = false,
 				})
-				vim.keymap.set("n", "<leader>c", "<cmd>TSContextToggle<CR>", { desc = "toggle context" })
+				vim.keymap.set("n", "<leader>c", "<cmd>TSContext toggle<CR>", { desc = "toggle context" })
 			end,
 		},
 		{
@@ -136,7 +135,7 @@ require("lazy").setup({
 		{
 			"nvim-telescope/telescope.nvim",
 			event = "VeryLazy",
-			tag = "0.1.5",
+			tag = "0.1.8",
 			dependencies = { "nvim-lua/plenary.nvim" },
 
 			config = function()
@@ -234,6 +233,13 @@ require("lazy").setup({
 				},
 				sections = {
 					lualine_c = { { "filename", path = 1 } },
+					lualine_z = {
+						"location",
+						{
+							"lsp_status",
+							ignore_lsp = { "null-ls" },
+						},
+					},
 				},
 			},
 		},
@@ -246,7 +252,7 @@ require("lazy").setup({
 		{
 			"williamboman/mason-lspconfig.nvim",
 			opts = {
-				ensure_installed = { "lexical", "lua_ls", "gopls", "ruby_lsp", "rust_analyzer", "zls" },
+				ensure_installed = { "expert", "lua_ls", "gopls", "ruby_lsp", "rust_analyzer", "zls" },
 			},
 		},
 		{
@@ -255,7 +261,7 @@ require("lazy").setup({
 			dependencies = "rafamadriz/friendly-snippets",
 
 			-- use a release tag to download pre-built binaries
-			version = "v0.*",
+			version = "1.*",
 			-- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
 			-- build = 'cargo build --release',
 			-- If you use nix, you can build from source using latest nightly rust with:
@@ -291,6 +297,9 @@ require("lazy").setup({
 
 				-- experimental signature help support
 				signature = { enabled = true },
+
+				completion = { documentation = { auto_show = true } },
+				fuzzy = { implementation = "prefer_rust_with_warning" },
 			},
 			-- allows extending the providers array elsewhere in your config
 			-- without having to redefine it
@@ -307,50 +316,46 @@ require("lazy").setup({
 				-- require("neodev").setup({})
 				require("fidget").setup({})
 
-				local default_capabilities = require("blink.cmp").get_lsp_capabilities()
-				--local default_capabilities = vim.lsp.protocol.make_client_capabilities()
-				local lspconfig = require("lspconfig")
+				local default_capabilities =
+					require("blink.cmp").get_lsp_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-				-- default_capabilities =
-				-- 	vim.tbl_deep_extend("force", default_capabilities, require("cmp_nvim_lsp").default_capabilities())
-				-- local default_capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-				lspconfig.elixirls.setup({
-					cmd = { "/Users/erik/.local/share/nvim/mason/bin/elixir-ls" },
-					capabilities = default_capabilities,
-					-- settings = {
-					-- 	elixirLS = {
-					-- 		dialyzerEnabled = false,
-					-- 		fetchDeps = false,
-					-- 	},
-					-- },
-				})
-
-				-- lspconfig.lexical.setup({
-				-- 	filetypes = { "elixir", "eelixir", "heex" },
-				-- 	cmd = { "/Users/erik/.local/share/nvim/mason/bin/lexical", "server" },
-				-- 	-- cmd = { "/Users/erik/.local/share/nvim/mason/packages/lexical/libexec/lexical/bin/start_lexical.sh" },
-				-- 	root_dir = require("lspconfig.util").root_pattern({ "mix.exs", ".git" }),
+				-- vim.lsp.config("elixirls", {
+				-- 	cmd = { "/Users/erik/.local/share/nvim/mason/bin/elixir-ls" },
 				-- 	capabilities = default_capabilities,
 				-- })
+				--
+				vim.lsp.config("expert", {
+					-- cmd = { "/Users/erik/bin/expert-ls" },
+					cmd = { "/Users/erik/.local/share/nvim/mason/bin/expert", "--stdio" },
+					root_markers = { "mix.exs", ".git" },
+					filetypes = { "elixir", "eelixir", "heex" },
+				})
+				vim.lsp.enable("expert")
 
-				lspconfig.zls.setup({
+				vim.lsp.config("nu", {
+					cmd = { "nu", "--lsp" },
+					filetypes = { "nu" },
+					single_file_support = true,
+				})
+				vim.lsp.enable("nu")
+
+				vim.lsp.config("zls", {
 					capabilities = default_capabilities,
 				})
 
-				lspconfig.ruby_lsp.setup({
+				vim.lsp.config("ruby_lsp", {
 					capabilities = default_capabilities,
 				})
 
-				lspconfig.rust_analyzer.setup({
+				vim.lsp.config("rust_analyzer", {
 					capabilities = default_capabilities,
 				})
 
-				lspconfig.gopls.setup({
+				vim.lsp.config("gopls", {
 					capabilities = default_capabilities,
 				})
 
-				lspconfig.lua_ls.setup({
+				vim.lsp.config("lua_ls", {
 					capabilities = default_capabilities,
 					settings = {
 						Lua = {
@@ -367,8 +372,6 @@ require("lazy").setup({
 									"${3rd}/luv/library",
 									unpack(vim.api.nvim_get_runtime_file("", true)),
 								},
-								-- If lua_ls is really slow on your computer, you can try this instead:
-								-- library = { vim.env.VIMRUNTIME },
 							},
 						},
 					},
@@ -382,8 +385,8 @@ require("lazy").setup({
 				-- Global mappings.
 				-- See `:help vim.diagnostic.*` for documentation on any of the below functions
 				vim.keymap.set("n", "<space>e", vim.diagnostic.open_float)
-				vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
-				vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
+				-- vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
+				-- vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
 				vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist)
 
 				-- not sure if needed
@@ -401,7 +404,7 @@ require("lazy").setup({
 						end
 
 						-- Enable completion triggered by <c-x><c-o>
-						vim.bo[event.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+						-- vim.bo[event.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 
 						-- Buffer local mappings.
 						-- See `:help vim.lsp.*` for documentation on any of the below functions
@@ -410,7 +413,7 @@ require("lazy").setup({
 						vim.keymap.set("n", "K", vim.lsp.buf.hover, gen_opts("LSP hover"))
 						-- vim.keymap.set("n", "gi", vim.lsp.buf.implementation, gen_opts("Goto implementation"))
 						-- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-						-- vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+						-- vim.keymap.set('n', '<12space>wa', vim.lsp.buf.add_workspace_folder, opts)
 						-- vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
 						-- vim.keymap.set('n', '<space>wl', function()
 						--   print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
@@ -506,7 +509,7 @@ require("lazy").setup({
 						if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
 							return
 						end
-						return { timeout_ms = 1000, lsp_fallback = true }
+						return { timeout_ms = 1000, lsp_format = "fallback" }
 					end,
 					formatters_by_ft = {
 						elixir = { "mix" },
@@ -519,9 +522,8 @@ require("lazy").setup({
 						-- Conform can also run multiple formatters sequentially
 						-- python = { "isort", "black" },
 						--
-						-- You can use a sub-list to tell conform to run *until* a formatter
-						-- is found.
-						-- javascript = { { "prettierd", "prettier" } },
+						-- You can tell conform to run *until* a formatter is found.
+						-- javascript = { "prettierd", "prettier", stop_after_first = true },
 					},
 				})
 
@@ -585,5 +587,16 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 		vim.opt_local.expandtab = false
 		vim.opt_local.list = false
 		-- vim.opt_local.listchars = { tab = "  ", trail = "·" }
+	end,
+})
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(ev)
+		local client = vim.lsp.get_client_by_id(ev.data.client_id)
+		if client then
+			if client:supports_method("textDocument/completion") then
+				vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+			end
+		end
 	end,
 })
