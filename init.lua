@@ -77,6 +77,20 @@ vim.api.nvim_create_autocmd("PackChanged", {
 	end,
 })
 
+-- To delete unused plugins, run this in a scratch buffer:
+--
+-- to_del = vim.iter(vim.pack.get())
+-- 	:filter(function(x)
+-- 		return not x.active
+-- 	end)
+-- 	:map(function(x)
+-- 		return x.spec.name
+-- 	end)
+-- 	:totable()
+--
+-- vim.print(to_del)
+-- vim.pack.del(to_del)
+--
 vim.pack.add({
 	-- Dependencies first
 	"https://github.com/nvim-lua/plenary.nvim",
