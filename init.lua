@@ -92,7 +92,6 @@ vim.pack.add({
 
 	-- Treesitter
 	"https://github.com/nvim-treesitter/nvim-treesitter",
-	"https://github.com/nvim-treesitter/nvim-treesitter-context",
 
 	-- Mini
 	"https://github.com/echasnovski/mini.nvim",
@@ -178,11 +177,6 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 	end,
 })
-
-require("treesitter-context").setup({
-	enable = false,
-})
-vim.keymap.set("n", "<leader>c", "<cmd>TSContext toggle<CR>", { desc = "toggle context" })
 
 -- Mini
 require("mini.ai").setup()
@@ -387,16 +381,6 @@ do
 		end,
 	})
 end
-
--- none-ls
--- do
--- 	local null_ls = require("null-ls")
--- 	null_ls.setup({
--- 		sources = {
--- 			null_ls.builtins.formatting.stylua,
--- 		},
--- 	})
--- end
 
 -- nvim-surround
 require("nvim-surround").setup({})
