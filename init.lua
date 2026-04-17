@@ -147,6 +147,7 @@ local ts_parsers = {
 	"elixir",
 	"fish",
 	"go",
+	"heex",
 	"html",
 	"javascript",
 	"lua",
@@ -310,8 +311,6 @@ do
 	-- 	filetypes = { "elixir", "eelixir", "heex" },
 	-- })
 	-- vim.lsp.enable("expert")
-	--
-	--
 
 	vim.lsp.config("dexter", {
 		cmd = { "dexter", "lsp" },
