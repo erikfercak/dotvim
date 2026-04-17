@@ -264,6 +264,9 @@ require("lualine").setup({
 require("mason").setup()
 require("mason-lspconfig").setup({
 	ensure_installed = { "expert", "lua_ls", "gopls", "ruby_lsp", "rust_analyzer", "zls" },
+	automatic_enable = {
+		exclude = { "elixirls", "expert" },
+	},
 })
 
 -- blink.cmp
@@ -287,12 +290,26 @@ do
 
 	local default_capabilities = require("blink.cmp").get_lsp_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-	vim.lsp.config("expert", {
-		cmd = { "/Users/erik/.local/share/nvim/mason/bin/expert", "--stdio" },
-		root_markers = { "mix.exs", ".git" },
+	-- vim.lsp.config("expert", {
+	-- 	cmd = { "/Users/erik/.local/share/nvim/mason/bin/expert", "--stdio" },
+	-- 	root_markers = { "mix.exs", ".git" },
+	-- 	filetypes = { "elixir", "eelixir", "heex" },
+	-- })
+	-- vim.lsp.enable("expert")
+	--
+	--
+
+	vim.lsp.config("dexter", {
+		cmd = { "dexter", "lsp" },
+		root_markers = { ".dexter.db", ".git", "mix.exs" },
 		filetypes = { "elixir", "eelixir", "heex" },
+		init_options = {
+			followDelegates = true, -- jump through defdelegate to the target function
+			-- stdlibPath = "",      -- override Elixir stdlib path (auto-detected)
+			-- debug = false,        -- verbose logging to stderr (view with :LspLog)
+		},
 	})
-	vim.lsp.enable("expert")
+	vim.lsp.enable("dexter")
 
 	vim.lsp.config("nu", {
 		cmd = { "nu", "--lsp" },
