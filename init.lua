@@ -1,6 +1,8 @@
 -- Forgo lazy loading for an experimental loader with byte-compilation cache
 vim.loader.enable()
 
+require("vim._core.ui2").enable({})
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
@@ -110,9 +112,8 @@ vim.pack.add({
 	-- Mini
 	"https://github.com/echasnovski/mini.nvim",
 
-	-- Telescope
-	{ src = "https://github.com/nvim-telescope/telescope.nvim", version = "0.1.8" },
-	"https://github.com/nvim-telescope/telescope-ui-select.nvim",
+	-- Faster than Telescope
+	"https://github.com/ibhagwan/fzf-lua",
 
 	-- UI / utility
 	"https://github.com/folke/which-key.nvim",
@@ -196,55 +197,46 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Mini
 require("mini.ai").setup()
 
--- Telescope
+-- fzf-lua
 do
-	local actions = require("telescope.actions")
-	local layout_actions = require("telescope.actions.layout")
+	local fzf = require("fzf-lua")
 
-	require("telescope").setup({
-		defaults = {
-			preview = { hide_on_startup = true },
-			mappings = {
-				i = {
-					["<esc>"] = actions.close,
-					["<C-v>"] = layout_actions.toggle_preview,
-				},
+	fzf.setup({
+		winopts = {
+			-- Match the telescope setup: no preview until asked for
+			preview = { hidden = true },
+		},
+		-- NOTE: `keymap` and `actions` tables REPLACE fzf-lua's defaults unless
+		-- `[1] = true` is set to opt into inheriting them. Without it you silently
+		-- lose <enter> (open file), paging, etc. See fzf-lua config.lua build_bind_tables.
+		keymap = {
+			-- <C-v> toggles the preview, mirroring the telescope mapping.
+			-- vsplit moves to <A-v> since <C-v> is taken.
+			builtin = { [1] = true, ["<C-v>"] = "toggle-preview" },
+			fzf = { [1] = true, ["ctrl-v"] = "toggle-preview" },
+		},
+		actions = {
+			files = {
+				[1] = true,
+				["ctrl-v"] = false,
+				["alt-v"] = fzf.actions.file_vsplit,
 			},
 		},
-		pickers = {
-			buffers = {
-				mappings = {
-					i = {
-						["<c-d>"] = actions.delete_buffer,
-					},
-				},
-			},
-		},
-		extensions = {
-			["ui-select"] = {
-				require("telescope.themes").get_dropdown({}),
+		buffers = {
+			actions = {
+				["ctrl-x"] = false,
+				["ctrl-d"] = { fn = fzf.actions.buf_del, reload = true },
 			},
 		},
 	})
-	require("telescope").load_extension("ui-select")
 
-	local builtin = require("telescope.builtin")
+	vim.keymap.set("n", "<leader>f", fzf.files, { desc = "find files" })
+	vim.keymap.set("n", "<leader>r", fzf.oldfiles, { desc = "find recent files" })
+	vim.keymap.set("n", "<leader>lg", fzf.live_grep, { desc = "live grep" })
+	vim.keymap.set("n", "<leader>w", fzf.grep_cword, { desc = "search current word" })
 	vim.keymap.set("n", "<leader>b", function()
-		builtin.buffers({ sort_lastused = true })
+		fzf.buffers({ sort_lastused = true })
 	end, { desc = "find buffers" })
-	vim.keymap.set("n", "<leader>f", builtin.find_files, { desc = "find files" })
-	vim.keymap.set("n", "<leader>r", builtin.oldfiles, { desc = "find recent files" })
-	vim.keymap.set("n", "<leader>lg", builtin.live_grep, { desc = "live grep" })
-	vim.keymap.set("n", "<leader>h", builtin.help_tags, { desc = "search help" })
-	vim.keymap.set("n", "<leader>w", builtin.grep_string, { desc = "search current word" })
-	vim.keymap.set("n", "<leader>gs", builtin.git_status, { desc = "git status files" })
-
-	vim.keymap.set("n", "<leader>/", function()
-		builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
-			winblend = 10,
-			previewer = false,
-		}))
-	end, { desc = "[/] Fuzzily search in current buffer" })
 end
 
 -- which-key
@@ -278,7 +270,8 @@ require("lualine").setup({
 -- Mason
 require("mason").setup()
 require("mason-lspconfig").setup({
-	ensure_installed = { "expert", "lua_ls", "gopls", "ruby_lsp", "rust_analyzer", "zls" },
+	--ensure_installed = { "expert", "lua_ls", "gopls", "ruby_lsp", "rust_analyzer", "zls", "tofu_ls" },
+	ensure_installed = { "expert", "lua_ls" },
 	automatic_enable = {
 		exclude = { "elixirls", "expert" },
 	},
@@ -303,7 +296,11 @@ require("blink.cmp").setup({
 do
 	require("fidget").setup({})
 
-	local default_capabilities = require("blink.cmp").get_lsp_capabilities(vim.lsp.protocol.make_client_capabilities())
+	-- local default_capabilities = require("blink.cmp").get_lsp_capabilities(vim.lsp.protocol.make_client_capabilities())
+	local default_capabilities = vim.lsp.protocol.make_client_capabilities()
+	vim.lsp.config("*", {
+		capabilities = default_capabilities,
+	})
 
 	-- vim.lsp.config("expert", {
 	-- 	cmd = { "/Users/erik/.local/share/nvim/mason/bin/expert", "--stdio" },
@@ -314,7 +311,7 @@ do
 
 	vim.lsp.config("dexter", {
 		cmd = { "dexter", "lsp" },
-		root_markers = { ".dexter.db", ".git", "mix.exs" },
+		root_markers = { ".dexter/dexter.db", ".dexter.db", ".git", "mix.exs" },
 		filetypes = { "elixir", "eelixir", "heex" },
 		init_options = {
 			followDelegates = true, -- jump through defdelegate to the target function
@@ -331,24 +328,15 @@ do
 	})
 	vim.lsp.enable("nu")
 
-	vim.lsp.config("zls", {
-		capabilities = default_capabilities,
-	})
-
-	vim.lsp.config("ruby_lsp", {
-		capabilities = default_capabilities,
-	})
-
-	vim.lsp.config("rust_analyzer", {
-		capabilities = default_capabilities,
-	})
-
-	vim.lsp.config("gopls", {
-		capabilities = default_capabilities,
+	vim.lsp.enable({
+		-- "zls",
+		-- "ruby_lsp",
+		-- "rust_analyzer",
+		-- "gopls",
+		-- "tofu_ls",
 	})
 
 	vim.lsp.config("lua_ls", {
-		capabilities = default_capabilities,
 		settings = {
 			Lua = {
 				runtime = {
@@ -368,6 +356,7 @@ do
 			},
 		},
 	})
+	vim.lsp.enable("lua_ls")
 
 	vim.diagnostic.config({
 		virtual_text = { source = true },
